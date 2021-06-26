@@ -28,7 +28,7 @@ class RetrofitService {
     }
 
 
-    fun getBeerImageResponse(): LiveData<List<BeerData>> {
+    fun getBeerImageResponse(): MutableLiveData<List<BeerData>> {
         val liveDataResponse: MutableLiveData<List<BeerData>> = MutableLiveData()
         val callPunkApi: Call<List<BeerData>> = punkApiService.loadImages()
 
