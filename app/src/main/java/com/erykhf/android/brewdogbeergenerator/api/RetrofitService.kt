@@ -20,9 +20,9 @@ class RetrofitService {
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
-                .baseUrl((BASE_URL))
-                .addConverterFactory(MoshiConverterFactory.create())
-                .build()
+            .baseUrl((BASE_URL))
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
 
         punkApiService = retrofit.create(PunkApiService::class.java)
     }
@@ -34,15 +34,11 @@ class RetrofitService {
 
         callPunkApi.enqueue(object : Callback<List<BeerData>> {
             override fun onResponse(
-                    call: Call<List<BeerData>>,
-                    response: Response<List<BeerData>>
+                call: Call<List<BeerData>>,
+                response: Response<List<BeerData>>
             ) {
                 val beerResponse: List<BeerData>? = response.body()
-
-
-
                 liveDataResponse.value = beerResponse
-
             }
 
             override fun onFailure(call: Call<List<BeerData>>, t: Throwable) {
