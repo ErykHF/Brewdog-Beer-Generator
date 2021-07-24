@@ -26,6 +26,7 @@ import com.erykhf.android.brewdogbeergenerator.GlideImageLoader
 import com.erykhf.android.brewdogbeergenerator.ImageLoader
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.api.RetrofitService
+import com.erykhf.android.brewdogbeergenerator.databinding.MainFragmentBinding
 import com.erykhf.android.brewdogbeergenerator.model.BeerData
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -35,15 +36,16 @@ import kotlinx.coroutines.withContext
 
 private const val TAG = "MainActivity"
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(R.layout.main_fragment) {
 
-    private var beerName: TextView? = view?.findViewById(R.id.beer_name)
-    private var profileImageView: ImageView? = view?.findViewById(R.id.main_profile_image)
-    private var descriptionResponse: TextView? = view?.findViewById(R.id.description_response)
-    private var firstBrewed: TextView? = view?.findViewById(R.id.first_brewed)
-    private var tagLine: TextView? = view?.findViewById(R.id.tag_line)
+    private lateinit var beerName: TextView
+    private lateinit var profileImageView: ImageView
+    private lateinit var descriptionResponse: TextView
+    private lateinit var firstBrewed: TextView
+    private lateinit var tagLine: TextView
     private var isNetworkConnected = false
 
+    private lateinit var binding: MainFragmentBinding
 
     private val imageLoader: ImageLoader by lazy {
         GlideImageLoader(requireActivity())
@@ -51,49 +53,51 @@ class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
 
-    private fun getBeerResponse() {
-
-        val punkApiLiveData: LiveData<List<BeerData>> = RetrofitService().getBeerImageResponse()
-        punkApiLiveData.observe(requireActivity(), Observer { beerResponse ->
-            Log.d(TAG, "onCreateView: $beerResponse")
-
-            val noImagePlaceHolder =
-                "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
-            val imageUrl = beerResponse?.firstOrNull()?.image_url ?: noImagePlaceHolder
-
-            if (profileImageView != null) {
-                imageLoader.loadImage(imageUrl, profileImageView!!)
-            }
-            beerName?.text = beerResponse?.firstOrNull()?.name ?: "Unknown"
-            descriptionResponse?.text = beerResponse?.firstOrNull()?.description
-                ?: "No Description"
-            firstBrewed?.text = ("First brewed: ${beerResponse?.firstOrNull()?.first_brewed}")
-                ?: "No Data"
-            tagLine?.text = beerResponse?.firstOrNull()?.tagline ?: "No tags"
-        })
-    }
-
-
-//    To Use with ViewModel when you figure out the OnClick.
-//    private fun getBeerResponseViewModel(){
+//    private fun getBeerResponse() {
 //
-//        viewModel.beerItemLiveData.observe(viewLifecycleOwner, Observer { beerResponse ->
+//        val punkApiLiveData: LiveData<List<BeerData>> = RetrofitService().getBeerImageResponse()
+//        punkApiLiveData.observe(requireActivity(), Observer { beerResponse ->
 //            Log.d(TAG, "onCreateView: $beerResponse")
 //
-//            val noImagePlaceHolder = "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+//            val noImagePlaceHolder =
+//                "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
 //            val imageUrl = beerResponse?.firstOrNull()?.image_url ?: noImagePlaceHolder
 //
 //            if (profileImageView != null) {
-//                imageLoader.loadImage(imageUrl, profileImageView!!)
+//                imageLoader.loadImage(imageUrl, profileImageView)
 //            }
-//            beerName?.text = beerResponse?.firstOrNull()?.name ?: "Unknown"
-//            descriptionResponse?.text = beerResponse?.firstOrNull()?.description
-//                    ?: "No Description"
-//            firstBrewed?.text = ("First brewed: ${beerResponse?.firstOrNull()?.first_brewed}")
-//                    ?: "No Data"
-//            tagLine?.text = beerResponse?.firstOrNull()?.tagline ?: "No tags"
+//            beerName.text = beerResponse?.firstOrNull()?.name ?: "Unknown"
+//            descriptionResponse.text = beerResponse?.firstOrNull()?.description
+//                ?: "No Description"
+//            firstBrewed.text = ("First brewed: ${beerResponse?.firstOrNull()?.first_brewed}")
+//                ?: "No Data"
+//            tagLine.text = beerResponse?.firstOrNull()?.tagline ?: "No tags"
 //        })
 //    }
+
+
+//    To Use with ViewModel when you figure out the OnClick/ViewModel (Why it's not updating).
+    private fun getBeerResponse(){
+
+        viewModel.beerItemLiveData.observe(viewLifecycleOwner, Observer { beerResponse ->
+            Log.d(TAG, "onCreateView: $beerResponse")
+
+            viewModel.refresh()
+
+            val noImagePlaceHolder = "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+            val imageUrl = beerResponse?.firstOrNull()?.image_url ?: noImagePlaceHolder
+
+            if (profileImageView != null) {
+                imageLoader.loadImage(imageUrl, profileImageView)
+            }
+            beerName.text = beerResponse?.firstOrNull()?.name ?: "Unknown"
+            descriptionResponse.text = beerResponse?.firstOrNull()?.description
+                    ?: "No Description"
+            firstBrewed.text = ("First brewed: ${beerResponse?.firstOrNull()?.first_brewed}")
+                    ?: "No Data"
+            tagLine.text = beerResponse?.firstOrNull()?.tagline ?: "No tags"
+        })
+    }
 
 
     override fun onCreateView(
@@ -131,13 +135,15 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = MainFragmentBinding.bind(view)
+
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        beerName = view.findViewById(R.id.beer_name)
-        profileImageView = view.findViewById(R.id.main_profile_image)
-        descriptionResponse = view.findViewById(R.id.description_response)
-        tagLine = view.findViewById(R.id.tag_line)
-        firstBrewed = view.findViewById(R.id.first_brewed)
+        beerName = binding.beerName
+        profileImageView = binding.mainProfileImage
+        descriptionResponse = binding.descriptionResponse
+        tagLine = binding.tagLine
+        firstBrewed = binding.firstBrewed
 
 
         if (isNetworkConnected != true) {
@@ -145,7 +151,7 @@ class MainFragment : Fragment() {
             snackFunction()
         }
 
-        profileImageView?.setOnClickListener {
+        profileImageView.setOnClickListener {
             if (isNetworkConnected != true) {
                 snackFunction()
             } else {

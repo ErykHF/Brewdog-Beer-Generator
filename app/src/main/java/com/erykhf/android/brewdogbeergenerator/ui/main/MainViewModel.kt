@@ -9,10 +9,14 @@ import com.erykhf.android.brewdogbeergenerator.model.BeerData
 
 class MainViewModel : ViewModel() {
 
-    val beerItemLiveData : MutableLiveData<List<BeerData>>
+    var beerItemLiveData : MutableLiveData<List<BeerData>>
 
     init {
 
+        beerItemLiveData = RetrofitService().getBeerImageResponse()
+    }
+
+    fun refresh(){
         beerItemLiveData = RetrofitService().getBeerImageResponse()
     }
 }

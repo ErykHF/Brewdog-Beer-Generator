@@ -17,7 +17,6 @@ class RetrofitService {
 
     private val punkApiService: PunkApiService
 
-
     init {
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl((BASE_URL))
@@ -29,6 +28,7 @@ class RetrofitService {
 
 
     fun getBeerImageResponse(): MutableLiveData<List<BeerData>> {
+
         val liveDataResponse: MutableLiveData<List<BeerData>> = MutableLiveData()
         val callPunkApi: Call<List<BeerData>> = punkApiService.loadImages()
 
