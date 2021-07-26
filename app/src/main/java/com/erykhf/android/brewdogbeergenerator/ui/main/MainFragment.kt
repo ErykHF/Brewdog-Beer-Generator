@@ -2,6 +2,7 @@ package com.erykhf.android.brewdogbeergenerator.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.*
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.wifi.WifiManager
@@ -76,15 +77,16 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 //    }
 
 
-//    To Use with ViewModel when you figure out the OnClick/ViewModel (Why it's not updating).
-    private fun getBeerResponse(){
+    //    To Use with ViewModel when you figure out the OnClick/ViewModel (Why it's not updating).
+    private fun getBeerResponse() {
 
         viewModel.beerItemLiveData.observe(viewLifecycleOwner, Observer { beerResponse ->
             Log.d(TAG, "onCreateView: $beerResponse")
 
             viewModel.refresh()
 
-            val noImagePlaceHolder = "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+            val noImagePlaceHolder =
+                "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
             val imageUrl = beerResponse?.firstOrNull()?.image_url ?: noImagePlaceHolder
 
             if (profileImageView != null) {
@@ -92,9 +94,9 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             }
             beerName.text = beerResponse?.firstOrNull()?.name ?: "Unknown"
             descriptionResponse.text = beerResponse?.firstOrNull()?.description
-                    ?: "No Description"
+                ?: "No Description"
             firstBrewed.text = ("First brewed: ${beerResponse?.firstOrNull()?.first_brewed}")
-                    ?: "No Data"
+                ?: "No Data"
             tagLine.text = beerResponse?.firstOrNull()?.tagline ?: "No tags"
         })
     }
@@ -112,11 +114,14 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     fun snackFunction() {
         val snack: Snackbar =
-            Snackbar.make(requireView(), "No internet connection", Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(requireView(), "No internet connection", Snackbar.LENGTH_LONG)
         val view1 = snack.view
         val params = view1.layoutParams as FrameLayout.LayoutParams
         params.gravity = Gravity.TOP
         view1.layoutParams = params
+        snack.setTextColor(Color.CYAN)
+        snack.setActionTextColor(Color.GREEN)
+        snack.setBackgroundTint(Color.BLACK)
         snack.setAction("Connect", View.OnClickListener {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -130,6 +135,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             }
         })
         snack.show()
+
     }
 
 
@@ -168,6 +174,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 val builder = NetworkRequest.Builder()
                 builder.addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build()
                 builder.addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+
                 connectivityManager.registerDefaultNetworkCallback(object : NetworkCallback() {
 
                     override fun onAvailable(network: Network) {
