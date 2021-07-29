@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-private const val TAG = "MainActivity"
+private const val TAG = "MainFragment"
 
 class MainFragment : Fragment(R.layout.main_fragment) {
 
@@ -44,7 +44,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private lateinit var descriptionResponse: TextView
     private lateinit var firstBrewed: TextView
     private lateinit var tagLine: TextView
-    private var isNetworkConnected = false
 
     private lateinit var binding: MainFragmentBinding
 
@@ -52,7 +51,9 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         GlideImageLoader(requireActivity())
     }
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
 
 //    private fun getBeerResponse() {
 //
@@ -83,7 +84,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         viewModel.beerItemLiveData.observe(viewLifecycleOwner, Observer { beerResponse ->
             Log.d(TAG, "onCreateView: $beerResponse")
 
-            viewModel.refresh()
+//            viewModel.refresh()
 
             val noImagePlaceHolder =
                 "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
@@ -107,7 +108,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         savedInstanceState: Bundle?
     ): View {
 
-        registerNetworkCallback()
         return inflater.inflate(R.layout.main_fragment, container, false)
 
     }
@@ -135,15 +135,12 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             }
         })
         snack.show()
-
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = MainFragmentBinding.bind(view)
-
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         beerName = binding.beerName
         profileImageView = binding.mainProfileImage
@@ -152,19 +149,33 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         firstBrewed = binding.firstBrewed
 
 
-        if (isNetworkConnected != true) {
+        if (!isOnline()) {
             Toast.makeText(requireContext(), "Network Not Connected", Toast.LENGTH_LONG).show()
             snackFunction()
+        } else if (isOnline()) {
+            Toast.makeText(requireContext(), "In the if statement", Toast.LENGTH_SHORT).show()
+            registerNetworkCallback()
         }
 
+
+
         profileImageView.setOnClickListener {
-            if (isNetworkConnected != true) {
+            if (!isOnline()) {
                 snackFunction()
-            } else {
+            } else if (isOnline()) {
+                viewModel.refresh()
                 getBeerResponse()
             }
         }
     }
+
+    private fun isOnline(): Boolean {
+        val connectivityManager =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
 
     private fun registerNetworkCallback() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -178,9 +189,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 connectivityManager.registerDefaultNetworkCallback(object : NetworkCallback() {
 
                     override fun onAvailable(network: Network) {
-                        Toast.makeText(requireContext(), "Network Connected", Toast.LENGTH_LONG)
-                            .show()
-                        isNetworkConnected = true // Global Static Variable
+                        Log.d(TAG, "onAvailable: Network Connected")
                         lifecycleScope.launch {
                             withContext(Dispatchers.Main) {
                                 getBeerResponse()
@@ -189,13 +198,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                     }
 
                     override fun onLost(network: Network) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Network Lost",
-                            Toast.LENGTH_LONG
-                        ).show()
-
-                        isNetworkConnected = false // Global Static Variable
+                        Log.d(TAG, "onLost: Network Lost")
                         lifecycleScope.launch {
                             withContext(Dispatchers.Main) {
                                 snackFunction()
@@ -206,9 +209,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 }
 
                 )
-                isNetworkConnected = false
             } catch (e: Exception) {
-                isNetworkConnected = false
             }
         } else {
             (this.context?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.apply {

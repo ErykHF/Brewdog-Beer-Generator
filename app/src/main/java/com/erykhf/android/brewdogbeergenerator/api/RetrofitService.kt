@@ -13,7 +13,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 private const val BASE_URL = "https://api.punkapi.com/v2/beers/"
 
 
-class RetrofitService {
+object RetrofitService {
 
     private val punkApiService: PunkApiService
 
@@ -37,8 +37,14 @@ class RetrofitService {
                 call: Call<List<BeerData>>,
                 response: Response<List<BeerData>>
             ) {
-                val beerResponse: List<BeerData>? = response.body()
-                liveDataResponse.value = beerResponse
+                if (response.isSuccessful) {
+                    val beerResponse: List<BeerData>? = response.body()
+                    liveDataResponse.value = beerResponse
+                    Log.d("Retrofit", "onResponse: SUCCESS!")
+
+                } else {
+                    Log.e("Retrofit", "onResponse: Not successful",)
+                }
             }
 
             override fun onFailure(call: Call<List<BeerData>>, t: Throwable) {
