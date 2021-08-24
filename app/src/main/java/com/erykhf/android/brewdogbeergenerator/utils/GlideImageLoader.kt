@@ -1,4 +1,4 @@
-package com.erykhf.android.brewdogbeergenerator
+package com.erykhf.android.brewdogbeergenerator.utils
 
 import android.content.Context
 import android.widget.ImageView

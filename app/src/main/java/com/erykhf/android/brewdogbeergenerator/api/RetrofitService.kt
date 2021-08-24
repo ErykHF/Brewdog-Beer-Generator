@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.erykhf.android.brewdogbeergenerator.model.BeerData
+import kotlinx.coroutines.GlobalScope
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,7 +16,7 @@ private const val BASE_URL = "https://api.punkapi.com/v2/beers/"
 
 object RetrofitService {
 
-    private val punkApiService: PunkApiService
+    val punkApiService: PunkApiService
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
@@ -24,34 +25,5 @@ object RetrofitService {
             .build()
 
         punkApiService = retrofit.create(PunkApiService::class.java)
-    }
-
-
-    fun getBeerImageResponse(): MutableLiveData<List<BeerData>> {
-
-        val liveDataResponse: MutableLiveData<List<BeerData>> = MutableLiveData()
-        val callPunkApi: Call<List<BeerData>> = punkApiService.loadImages()
-
-        callPunkApi.enqueue(object : Callback<List<BeerData>> {
-            override fun onResponse(
-                call: Call<List<BeerData>>,
-                response: Response<List<BeerData>>
-            ) {
-                if (response.isSuccessful) {
-                    val beerResponse: List<BeerData>? = response.body()
-                    liveDataResponse.value = beerResponse
-                    Log.d("Retrofit", "onResponse: SUCCESS!")
-
-                } else {
-                    Log.e("Retrofit", "onResponse: Not successful",)
-                }
-            }
-
-            override fun onFailure(call: Call<List<BeerData>>, t: Throwable) {
-                Log.e("MainActivity", "Failed to get search results", t)
-            }
-
-        })
-        return liveDataResponse
     }
 }
