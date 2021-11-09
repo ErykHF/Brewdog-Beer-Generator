@@ -26,8 +26,6 @@ import com.erykhf.android.brewdogbeergenerator.databinding.MainFragmentBinding
 import com.google.android.material.snackbar.Snackbar
 
 
-private const val TAG = "MainFragment"
-
 class MainFragment : Fragment(R.layout.main_fragment) {
 
     private lateinit var beerName: TextView
@@ -36,7 +34,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private lateinit var firstBrewed: TextView
     private lateinit var tagLine: TextView
     private lateinit var binding: MainFragmentBinding
-    lateinit var connectionLiveData: ConnectionLiveData
+    private lateinit var connectionLiveData: ConnectionLiveData
 
 
     private val imageLoader: ImageLoader by lazy {
@@ -67,7 +65,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
         connectionLiveData = ConnectionLiveData(requireContext())
 
-        connectionLiveData.observe(viewLifecycleOwner, Observer { isNetworkAvailable ->
+        connectionLiveData.observe(viewLifecycleOwner) { isNetworkAvailable ->
 
             if (isNetworkAvailable == true) {
 
@@ -82,14 +80,12 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 snackFunction()
                 Toast.makeText(requireContext(), "Network Unavailable", Toast.LENGTH_SHORT).show()
             }
-
-        })
-
+        }
     }
 
     private fun getBeerResponse() {
 
-        viewModel.beerItemLiveData.observe(viewLifecycleOwner, Observer { beerResponse ->
+        viewModel.beerItemLiveData.observe(viewLifecycleOwner) { beerResponse ->
 
             val noImagePlaceHolder =
                 "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
@@ -104,11 +100,11 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             firstBrewed.text = ("First brewed: ${beerResponse?.firstOrNull()?.first_brewed}")
                 ?: "No Data"
             tagLine.text = beerResponse?.firstOrNull()?.tagline ?: "No tags"
-        })
+        }
 
     }
 
-    fun snackFunction() {
+    private fun snackFunction() {
         val snack: Snackbar =
             Snackbar.make(requireView(), "No internet connection", Snackbar.LENGTH_LONG)
         val view1 = snack.view
@@ -125,7 +121,8 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 startActivityForResult(panelIntent, 0)
             } else {
                 // use previous solution, add appropriate permissions to AndroidManifest file (see answers above)
-                (this.context?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.apply {
+                (this.context?.applicationContext
+                    ?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.apply {
                     isWifiEnabled = true /*or false*/
                 }
             }
@@ -134,53 +131,8 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     }
 
 
-
-
-//    private fun registerNetworkCallback() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            try {
-//                val connectivityManager =
-//                    requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//                val builder = NetworkRequest.Builder()
-//                builder.addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build()
-//                builder.addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-//
-//                connectivityManager.registerDefaultNetworkCallback(object : NetworkCallback() {
-//
-//                    override fun onAvailable(network: Network) {
-//                        Log.d(TAG, "onAvailable: Network Connected")
-//                        lifecycleScope.launch {
-//                            withContext(Dispatchers.IO) {
-//                                getBeerResponse()
-//                            }
-//                        }
-//                    }
-//
-//                    override fun onLost(network: Network) {
-//                        Log.d(TAG, "onLost: Network Lost")
-//                        lifecycleScope.launch {
-//                            withContext(Dispatchers.Main) {
-//                                snackFunction()
-//                            }
-//                        }
-//
-//                    }
-//                }
-//
-//                )
-//            } catch (e: Exception) {
-//            }
-//        } else {
-//            (this.context?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.apply {
-//                isWifiEnabled = true /*or false*/
-//            }
-//
-//        }
-//    }
-
-
-companion object {
-    fun newInstance() = MainFragment()
-}
+    companion object {
+        fun newInstance() = MainFragment()
+    }
 
 }
