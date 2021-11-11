@@ -23,6 +23,8 @@ import com.erykhf.android.brewdogbeergenerator.utils.GlideImageLoader
 import com.erykhf.android.brewdogbeergenerator.utils.ImageLoader
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.databinding.MainFragmentBinding
+import com.erykhf.android.brewdogbeergenerator.utils.Util.getProgressDrawable
+import com.erykhf.android.brewdogbeergenerator.utils.Util.loadImages
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -92,7 +94,8 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             val imageUrl = beerResponse?.firstOrNull()?.image_url ?: noImagePlaceHolder
 
             if (profileImageView != null) {
-                imageLoader.loadImage(imageUrl, profileImageView)
+                val progressDrawable = getProgressDrawable(requireContext())
+                profileImageView.loadImages(imageUrl, progressDrawable)
             }
             beerName.text = beerResponse?.firstOrNull()?.name ?: "Unknown"
             descriptionResponse.text = beerResponse?.firstOrNull()?.description
