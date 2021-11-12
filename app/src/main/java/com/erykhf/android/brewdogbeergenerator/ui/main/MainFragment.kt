@@ -79,7 +79,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                     getBeerResponse()
                 }
             } else {
-                snackFunction()
                 Toast.makeText(requireContext(), "Network Unavailable", Toast.LENGTH_SHORT).show()
             }
         }
@@ -106,33 +105,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         }
 
     }
-
-    private fun snackFunction() {
-        val snack: Snackbar =
-            Snackbar.make(requireView(), "No internet connection", Snackbar.LENGTH_LONG)
-        val view1 = snack.view
-        val params = view1.layoutParams as FrameLayout.LayoutParams
-        params.gravity = Gravity.TOP
-        view1.layoutParams = params
-        snack.setTextColor(Color.CYAN)
-        snack.setActionTextColor(Color.GREEN)
-        snack.setBackgroundTint(Color.BLACK)
-        snack.setAction("Connect", View.OnClickListener {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val panelIntent = Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY)
-                startActivityForResult(panelIntent, 0)
-            } else {
-                // use previous solution, add appropriate permissions to AndroidManifest file (see answers above)
-                (this.context?.applicationContext
-                    ?.getSystemService(Context.WIFI_SERVICE) as? WifiManager)?.apply {
-                    isWifiEnabled = true /*or false*/
-                }
-            }
-        })
-        snack.show()
-    }
-
 
     companion object {
         fun newInstance() = MainFragment()
