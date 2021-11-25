@@ -10,20 +10,12 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Inject
 
 private const val BASE_URL = "https://api.punkapi.com/v2/beers/"
 
 
-object RetrofitService {
+class RetrofitService @Inject constructor (private val apiService: PunkApiService) {
 
-    val punkApiService: PunkApiService
-
-    init {
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl((BASE_URL))
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-
-        punkApiService = retrofit.create(PunkApiService::class.java)
-    }
+   fun getBeers() = apiService.loadImages()
 }

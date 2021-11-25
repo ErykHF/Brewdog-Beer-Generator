@@ -7,17 +7,21 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.erykhf.android.brewdogbeergenerator.api.RetrofitService
 import com.erykhf.android.brewdogbeergenerator.model.BeerData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val retrofitService: RetrofitService ,application: Application) : AndroidViewModel(application) {
 
     var beerItemLiveData : MutableLiveData<List<BeerData>> = MutableLiveData()
 
     init {
         beerItemLiveData = getBeerImageResponse()
+
     }
 
     fun refresh() = viewModelScope.launch{
@@ -34,7 +38,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun getBeerImageResponse(): MutableLiveData<List<BeerData>> {
         val liveDataResponse: MutableLiveData<List<BeerData>> = MutableLiveData()
-        val callPunkApi: Call<List<BeerData>> = RetrofitService.punkApiService.loadImages()
+        val callPunkApi: Call<List<BeerData>> = retrofitService.getBeers()
 
         callPunkApi.enqueue(object : Callback<List<BeerData>> {
             override fun onResponse(
