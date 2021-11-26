@@ -8,21 +8,15 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.erykhf.android.brewdogbeergenerator.networkutils.ConnectionLiveData
-import com.erykhf.android.brewdogbeergenerator.utils.GlideImageLoader
-import com.erykhf.android.brewdogbeergenerator.utils.ImageLoader
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.databinding.MainFragmentBinding
 import com.erykhf.android.brewdogbeergenerator.utils.Util.getProgressDrawable
@@ -45,24 +39,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private lateinit var binding: MainFragmentBinding
     private lateinit var connectionLiveData: ConnectionLiveData
 
-
-    private val imageLoader: ImageLoader by lazy {
-        GlideImageLoader(requireActivity())
-    }
-
-//    private val viewModel: MainViewModel by lazy {
-//        ViewModelProvider(this).get(MainViewModel::class.java)
-//    }
-
     private val viewModel: MainViewModel by viewModels()
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
-    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
