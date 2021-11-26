@@ -10,5 +10,5 @@ interface PunkApiService {
 
 
     @GET("random")
-    fun loadImages() : Call<List<BeerData>>
+    suspend fun loadImages(): List<BeerData>
 }

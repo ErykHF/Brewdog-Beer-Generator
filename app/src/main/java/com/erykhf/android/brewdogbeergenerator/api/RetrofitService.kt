@@ -17,5 +17,5 @@ private const val BASE_URL = "https://api.punkapi.com/v2/beers/"
 
 class RetrofitService @Inject constructor (private val apiService: PunkApiService) {
 
-   fun getBeers() = apiService.loadImages()
+   suspend fun getBeers() = apiService.loadImages()
 }
