@@ -29,8 +29,10 @@ import com.erykhf.android.brewdogbeergenerator.utils.Util.getProgressDrawable
 import com.erykhf.android.brewdogbeergenerator.utils.Util.loadImages
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 @AndroidEntryPoint
 class MainFragment : Fragment(R.layout.main_fragment) {
@@ -77,31 +79,11 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         connectionLiveData.observe(viewLifecycleOwner) { isNetworkAvailable ->
 
             if (isNetworkAvailable == true) {
-
-//                getBeerResponse()
+                loadBeerFlow()
 
                 profileImageView.setOnClickListener {
 
-                    lifecycleScope.launch {
-                        viewModel.beerFlow.collect { beerResponse ->
-
-                            beerResponse.let {
-                                val noImagePlaceHolder = "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
-                                val imageUrl = beerResponse.firstOrNull()?.image_url ?: noImagePlaceHolder
-                                val progressDrawable = getProgressDrawable(requireContext())
-
-                                profileImageView.loadImages(imageUrl, progressDrawable)
-                                beerName.text = beerResponse.firstOrNull()?.name ?: "Unknown"
-                                descriptionResponse.text = beerResponse.firstOrNull()?.description ?: "No Description"
-                                firstBrewed.text = ("First brewed: ${beerResponse.firstOrNull()?.first_brewed}")
-                                tagLine.text = beerResponse.firstOrNull()?.tagline ?: "No tags"
-                            }
-
-                        }
-                    }
-
-//                    viewModel.refresh()
-//                    getBeerResponse()
+                    loadBeerFlow()
                 }
             } else {
                 snackFunction()
@@ -110,23 +92,34 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         }
     }
 
-//    private fun getBeerResponse() {
-//
-//        viewModel.beerItemLiveData.observe(viewLifecycleOwner) { beerResponse ->
-//
-//            beerResponse?.let {
-//                val noImagePlaceHolder = "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
-//                val imageUrl = beerResponse.firstOrNull()?.image_url ?: noImagePlaceHolder
-//                val progressDrawable = getProgressDrawable(requireContext())
-//
-//                profileImageView.loadImages(imageUrl, progressDrawable)
-//                beerName.text = beerResponse.firstOrNull()?.name ?: "Unknown"
-//                descriptionResponse.text = beerResponse.firstOrNull()?.description ?: "No Description"
-//                firstBrewed.text = ("First brewed: ${beerResponse.firstOrNull()?.first_brewed}")
-//                tagLine.text = beerResponse.firstOrNull()?.tagline ?: "No tags"
-//            }
-//        }
-//    }
+    private fun loadBeerFlow(){
+        lifecycleScope.launch {
+            viewModel.beerFlow
+                .catch { exception ->
+                    if (exception !is IOException) throw exception
+                }
+                .collect { beerResponse ->
+
+                beerResponse.let {
+                    val noImagePlaceHolder =
+                        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+                    val imageUrl =
+                        beerResponse.firstOrNull()?.image_url ?: noImagePlaceHolder
+                    val progressDrawable = getProgressDrawable(requireContext())
+
+                    profileImageView.loadImages(imageUrl, progressDrawable)
+                    beerName.text = beerResponse.firstOrNull()?.name ?: "Unknown"
+                    descriptionResponse.text =
+                        beerResponse.firstOrNull()?.description ?: "No Description"
+                    firstBrewed.text =
+                        ("First brewed: ${beerResponse.firstOrNull()?.first_brewed}")
+                    tagLine.text = beerResponse.firstOrNull()?.tagline ?: "No tags"
+                }
+
+            }
+        }
+    }
+
 
     private fun snackFunction() {
         val snack: Snackbar =
