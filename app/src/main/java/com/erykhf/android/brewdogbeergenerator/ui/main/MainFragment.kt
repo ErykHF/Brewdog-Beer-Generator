@@ -20,7 +20,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.erykhf.android.brewdogbeergenerator.networkutils.ConnectionLiveData
-import com.erykhf.android.brewdogbeergenerator.utils.GlideImageLoader
 import com.erykhf.android.brewdogbeergenerator.utils.ImageLoader
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.databinding.MainFragmentBinding
@@ -41,13 +40,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private lateinit var connectionLiveData: ConnectionLiveData
 
 
-    private val imageLoader: ImageLoader by lazy {
-        GlideImageLoader(requireActivity())
-    }
-
-//    private val viewModel: MainViewModel by lazy {
-//        ViewModelProvider(this).get(MainViewModel::class.java)
-//    }
 
     private val viewModel: MainViewModel by viewModels()
 
