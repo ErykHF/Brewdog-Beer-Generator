@@ -75,7 +75,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
                 profileImageView.setOnClickListener {
 
-                    viewModel.refresh()
+                    viewModel.getBeerImageResponse()
                     getBeerResponse()
                 }
             } else {
@@ -86,7 +86,8 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     private fun getBeerResponse() {
 
-        viewModel.beerItemLiveData.observe(viewLifecycleOwner) { beerResponse ->
+        viewModel.getBeerImageResponse()
+        viewModel.beerData.observe(viewLifecycleOwner) { beerResponse ->
 
             val noImagePlaceHolder =
                 "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
