@@ -29,13 +29,6 @@ class MainViewModel @Inject constructor(private val retrofitService: RetrofitSer
     }
 
 
-    fun isOnline(): Boolean {
-        val connectivityManager =
-            getApplication<Application>().applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
-    }
-
     private fun getBeerImageResponse(): MutableLiveData<List<BeerData>> {
         val liveDataResponse: MutableLiveData<List<BeerData>> = MutableLiveData()
         val callPunkApi: Call<List<BeerData>> = retrofitService.getBeers()
