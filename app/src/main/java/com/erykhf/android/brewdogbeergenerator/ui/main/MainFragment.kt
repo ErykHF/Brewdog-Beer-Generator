@@ -86,20 +86,23 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
         viewModel.beerData.observe(viewLifecycleOwner) { beerResponse ->
 
-            val noImagePlaceHolder =
-                "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
-            val imageUrl = beerResponse?.firstOrNull()?.image_url ?: noImagePlaceHolder
+            beerResponse?.let {
 
-            if (profileImageView != null) {
-                val progressDrawable = getProgressDrawable(requireContext())
-                profileImageView.loadImages(imageUrl, progressDrawable)
+                val noImagePlaceHolder =
+                    "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+                val imageUrl = beerResponse?.firstOrNull()?.image_url ?: noImagePlaceHolder
+
+                if (profileImageView != null) {
+                    val progressDrawable = getProgressDrawable(requireContext())
+                    profileImageView.loadImages(imageUrl, progressDrawable)
+                }
+                beerName.text = beerResponse?.firstOrNull()?.name ?: "Unknown"
+                descriptionResponse.text = beerResponse?.firstOrNull()?.description
+                    ?: "No Description"
+                firstBrewed.text = ("First brewed: ${beerResponse?.firstOrNull()?.first_brewed}")
+                    ?: "No Data"
+                tagLine.text = beerResponse?.firstOrNull()?.tagline ?: "No tags"
             }
-            beerName.text = beerResponse?.firstOrNull()?.name ?: "Unknown"
-            descriptionResponse.text = beerResponse?.firstOrNull()?.description
-                ?: "No Description"
-            firstBrewed.text = ("First brewed: ${beerResponse?.firstOrNull()?.first_brewed}")
-                ?: "No Data"
-            tagLine.text = beerResponse?.firstOrNull()?.tagline ?: "No tags"
         }
 
     }
