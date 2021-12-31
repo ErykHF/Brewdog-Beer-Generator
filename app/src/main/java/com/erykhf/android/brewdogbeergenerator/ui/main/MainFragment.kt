@@ -77,6 +77,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             } else {
                 snackFunction()
                 Toast.makeText(requireContext(), "Network Unavailable", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Network Not here", Toast.LENGTH_SHORT).show()
             }
         }
     }
