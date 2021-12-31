@@ -74,9 +74,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 getBeerResponse()
 
                 profileImageView.setOnClickListener {
-
                     viewModel.getBeerImageResponse()
-                    getBeerResponse()
                 }
             } else {
                 Toast.makeText(requireContext(), "Network Unavailable", Toast.LENGTH_SHORT).show()
@@ -86,7 +84,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     private fun getBeerResponse() {
 
-        viewModel.getBeerImageResponse()
         viewModel.beerData.observe(viewLifecycleOwner) { beerResponse ->
 
             val noImagePlaceHolder =
