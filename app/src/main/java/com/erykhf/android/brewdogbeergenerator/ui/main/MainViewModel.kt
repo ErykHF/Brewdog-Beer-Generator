@@ -23,8 +23,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 //    }
 
 
-
-    private val repository = Repository()
+    val repository = Repository()
 
     private val _errorText = MutableLiveData<String?>()
 
