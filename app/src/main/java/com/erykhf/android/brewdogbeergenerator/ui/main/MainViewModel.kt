@@ -23,14 +23,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 //    }
 
 
-    fun isOnline(): Boolean {
-        val connectivityManager =
-            getApplication<Application>().applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
-    }
 
-    val repository = Repository()
+    private val repository = Repository()
 
     private val _errorText = MutableLiveData<String?>()
 
