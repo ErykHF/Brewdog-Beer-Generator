@@ -20,9 +20,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRepository(
-        api: PunkApiService
-    ) = Repository(api)
+    fun provideRepository(api: PunkApiService) = Repository(api)
 
     @Singleton
     @Provides

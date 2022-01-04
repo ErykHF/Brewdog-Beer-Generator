@@ -15,8 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repository: Repository,
-    application: Application
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     var beerItemLiveData: MutableLiveData<List<BeerData>> = MutableLiveData()
 
@@ -39,13 +38,15 @@ class MainViewModel @Inject constructor(
                 call: Call<List<BeerData>>,
                 response: Response<List<BeerData>>
             ) {
-                if (response.isSuccessful) {
-                    val beerResponse: List<BeerData>? = response.body()
-                    liveDataResponse.value = beerResponse
-                    Log.d("Retrofit", "onResponse: SUCCESS!")
+                response.let {
+                    if (response.isSuccessful) {
+                        val beerResponse: List<BeerData>? = response.body()
+                        liveDataResponse.value = beerResponse
+                        Log.d("Retrofit", "onResponse: SUCCESS!")
 
-                } else {
-                    Log.e("Retrofit", "onResponse: Not successful")
+                    } else {
+                        Log.e("Retrofit", "onResponse: Not successful")
+                    }
                 }
             }
 
