@@ -1,6 +1,7 @@
 package com.erykhf.android.brewdogbeergenerator.di
 
 import com.erykhf.android.brewdogbeergenerator.api.PunkApiService
+import com.erykhf.android.brewdogbeergenerator.repository.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,13 +20,16 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providePunkApiService(): Retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-
+    fun provideRepository(
+        api: PunkApiService
+    ) = Repository(api)
 
     @Singleton
     @Provides
-    fun provideApiService(retrofit: Retrofit): PunkApiService = retrofit.create(PunkApiService::class.java)
+    fun providePunkApiService(): PunkApiService =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(PunkApiService::class.java)
 }
