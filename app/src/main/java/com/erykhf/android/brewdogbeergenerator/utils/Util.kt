@@ -2,7 +2,6 @@ package com.erykhf.android.brewdogbeergenerator.utils
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.erykhf.android.brewdogbeergenerator.R

@@ -1,6 +1,5 @@
 package com.erykhf.android.brewdogbeergenerator.ui.main
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.erykhf.android.brewdogbeergenerator.model.BeerData

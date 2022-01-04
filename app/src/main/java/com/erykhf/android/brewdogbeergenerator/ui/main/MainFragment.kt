@@ -8,19 +8,12 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.erykhf.android.brewdogbeergenerator.networkutils.ConnectionLiveData
-import com.erykhf.android.brewdogbeergenerator.utils.ImageLoader
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.databinding.MainFragmentBinding
 import com.erykhf.android.brewdogbeergenerator.utils.Util.getProgressDrawable
@@ -31,35 +24,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainFragment : Fragment(R.layout.main_fragment) {
 
-    private lateinit var beerName: TextView
-    private lateinit var profileImageView: ImageView
-    private lateinit var descriptionResponse: TextView
-    private lateinit var firstBrewed: TextView
-    private lateinit var tagLine: TextView
     private lateinit var binding: MainFragmentBinding
     private lateinit var connectionLiveData: ConnectionLiveData
-
-
-
     private val viewModel: MainViewModel by viewModels()
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
-    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = MainFragmentBinding.bind(view)
-        beerName = binding.beerName
-        profileImageView = binding.mainProfileImage
-        descriptionResponse = binding.descriptionResponse
-        tagLine = binding.tagLine
-        firstBrewed = binding.firstBrewed
 
         connectionLiveData = ConnectionLiveData(requireContext())
 
@@ -69,7 +41,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
                 getBeerResponse()
 
-                profileImageView.setOnClickListener {
+                binding.mainProfileImage.setOnClickListener {
 
                     viewModel.refresh()
                     getBeerResponse()
@@ -90,11 +62,11 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 val imageUrl = beerResponse.firstOrNull()?.image_url ?: noImagePlaceHolder
                 val progressDrawable = getProgressDrawable(requireContext())
 
-                profileImageView.loadImages(imageUrl, progressDrawable)
-                beerName.text = beerResponse.firstOrNull()?.name ?: "Unknown"
-                descriptionResponse.text = beerResponse.firstOrNull()?.description ?: "No Description"
-                firstBrewed.text = ("First brewed: ${beerResponse.firstOrNull()?.first_brewed}")
-                tagLine.text = beerResponse.firstOrNull()?.tagline ?: "No tags"
+                binding.mainProfileImage.loadImages(imageUrl, progressDrawable)
+                binding.beerName.text = beerResponse.firstOrNull()?.name ?: "Unknown"
+                binding.descriptionResponse.text = beerResponse.firstOrNull()?.description ?: "No Description"
+                binding.firstBrewed.text = ("First brewed: ${beerResponse.firstOrNull()?.first_brewed}")
+                binding.tagLine.text = beerResponse.firstOrNull()?.tagline ?: "No tags"
             }
         }
     }
