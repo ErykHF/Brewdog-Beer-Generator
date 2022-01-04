@@ -16,7 +16,8 @@ class MainViewModel @Inject constructor(
     private val repository: Repository,
 ) : ViewModel() {
 
-    var beerItemLiveData: MutableLiveData<List<BeerData>> = MutableLiveData()
+    private val _beerItemLiveData: MutableLiveData<List<BeerData>> = MutableLiveData()
+    var beerItemLiveData: LiveData<List<BeerData>> = _beerItemLiveData
 
     init {
         beerItemLiveData = getBeerImageResponse()
