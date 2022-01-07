@@ -29,6 +29,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun saveBeer(beerData: BeerData) = repository.saveBeer(beerData)
+    fun getAllBeers() = repository.getAllBeers()
 
 
     private fun getBeerImageResponse(): MutableLiveData<List<BeerData>> {

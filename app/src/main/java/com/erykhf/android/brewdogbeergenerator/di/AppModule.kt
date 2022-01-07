@@ -1,6 +1,7 @@
 package com.erykhf.android.brewdogbeergenerator.di
 
 import com.erykhf.android.brewdogbeergenerator.api.PunkApiService
+import com.erykhf.android.brewdogbeergenerator.database.BeerDao
 import com.erykhf.android.brewdogbeergenerator.repository.Repository
 import dagger.Module
 import dagger.Provides
@@ -19,7 +20,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRepository(api: PunkApiService) = Repository(api)
+    fun provideRepository(api: PunkApiService, beerDao: BeerDao) = Repository(api, beerDao)
 
     @Singleton
     @Provides
