@@ -9,8 +9,8 @@ class Repository @Inject constructor(private val api: PunkApiService, private va
 
     fun getBeers() = api.loadImages()
 
-    fun saveBeer(beerData: BeerData) = beerDao.insertBeer(beerData)
+    suspend fun saveBeer(beerData: List<BeerData>) = beerDao.insertBeer(beerData)
 
-    fun getAllBeers() = beerDao.getAllBeers()
+    suspend fun getAllBeers() = beerDao.getAllBeers()
 
 }

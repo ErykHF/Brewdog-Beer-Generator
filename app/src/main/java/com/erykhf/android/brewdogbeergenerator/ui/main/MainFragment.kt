@@ -13,6 +13,7 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.erykhf.android.brewdogbeergenerator.networkutils.ConnectionLiveData
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.databinding.MainFragmentBinding
@@ -35,6 +36,10 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
         connectionLiveData = ConnectionLiveData(requireContext())
 
+        binding.floatingActionButton2?.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_savedBeerFragment)
+        }
+
         connectionLiveData.observe(viewLifecycleOwner) { isNetworkAvailable ->
 
             if (isNetworkAvailable == true) {
@@ -56,6 +61,10 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private fun getBeerResponse() {
 
         viewModel.beerItemLiveData.observe(viewLifecycleOwner) { beerResponse ->
+
+            binding.floatingActionButton?.setOnClickListener {
+                viewModel.saveBeer(beerResponse)
+            }
 
             beerResponse?.let {
                 val noImagePlaceHolder = "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
@@ -97,9 +106,5 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         snack.show()
     }
 
-
-    companion object {
-        fun newInstance() = MainFragment()
-    }
 
 }

@@ -28,8 +28,9 @@ class MainViewModel @Inject constructor(
         beerItemLiveData = getBeerImageResponse()
     }
 
-    fun saveBeer(beerData: BeerData) = repository.saveBeer(beerData)
-    fun getAllBeers() = repository.getAllBeers()
+    fun saveBeer(beerData: List<BeerData>) = viewModelScope.launch {
+        repository.saveBeer(beerData)
+    }
 
 
     private fun getBeerImageResponse(): MutableLiveData<List<BeerData>> {
