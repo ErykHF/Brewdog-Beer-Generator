@@ -28,6 +28,8 @@ class MainViewModel @Inject constructor(
         beerItemLiveData = getBeerImageResponse()
     }
 
+    fun saveBeer(beerData: BeerData) = repository.saveBeer(beerData)
+
 
     private fun getBeerImageResponse(): MutableLiveData<List<BeerData>> {
         val liveDataResponse: MutableLiveData<List<BeerData>> = MutableLiveData()
