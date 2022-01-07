@@ -24,7 +24,7 @@ object Util {
     }
 
 
-    fun ImageView.loadImages(uri: String, progressDrawable: CircularProgressDrawable) {
+    fun ImageView.loadImages(uri: String?, progressDrawable: CircularProgressDrawable) {
         Picasso.get().load(uri).placeholder(progressDrawable).error(R.mipmap.ic_launcher).into(this)
 
     }

@@ -19,7 +19,8 @@ class SavedBeerRecyclerViewAdapter(
     var values = mutableListOf<BeerData>()
 
     fun setImageList(images: List<BeerData>) {
-        this.values = images.toMutableList()
+        values.clear()
+        values.addAll(images)
         notifyDataSetChanged()
     }
 
@@ -32,11 +33,19 @@ class SavedBeerRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        when (holder) {
-            is ViewHolder -> {
-                holder.bind(values[position])
+        val beer = values[position]
+        holder.bind(beer)
+
+        holder.itemView.apply {
+
+
+            setOnClickListener {
+                onItemClickListener?.let {
+                    it(beer)
+                }
             }
         }
+
 
     }
 
@@ -44,7 +53,6 @@ class SavedBeerRecyclerViewAdapter(
 
     inner class ViewHolder(private val binding: FragmentSavedBeerBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
 
         fun bind(beerData: BeerData) {
 
@@ -56,10 +64,24 @@ class SavedBeerRecyclerViewAdapter(
 
                 val progressDrawable = Util.getProgressDrawable(itemView.context)
                 val imageLink = beerData.image_url
-                imageView.loadImages(imageLink, progressDrawable)
+                val noImagePlaceHolder =
+                    "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+
+                if (beerData.image_url.isNullOrBlank()) {
+                    imageView.loadImages(noImagePlaceHolder, progressDrawable)
+                } else {
+                    imageView.loadImages(imageLink, progressDrawable)
+                }
+
                 title.text = beerData.name
                 description.text = beerData.tagline
             }
         }
+    }
+
+    private var onItemClickListener: ((BeerData) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (BeerData) -> Unit) {
+        onItemClickListener = listener
     }
 }

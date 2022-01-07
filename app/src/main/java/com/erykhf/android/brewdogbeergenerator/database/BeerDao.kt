@@ -1,6 +1,7 @@
 package com.erykhf.android.brewdogbeergenerator.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
@@ -13,5 +14,8 @@ interface BeerDao {
     suspend fun getAllBeers(): List<BeerData>
 
     @Insert(onConflict = REPLACE)
-    suspend fun insertBeer(beerData: List<BeerData>)
+    suspend fun insertBeer(beerData: List<BeerData>?)
+
+    @Delete
+    suspend fun deleteBeer(beerData: BeerData)
 }
