@@ -1,5 +1,6 @@
 package com.erykhf.android.brewdogbeergenerator.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,11 +12,15 @@ import com.erykhf.android.brewdogbeergenerator.model.BeerData
 interface BeerDao {
 
     @Query("SELECT * FROM beerData ORDER by name ")
-    suspend fun getAllBeers(): List<BeerData>
+    fun getAllBeers(): LiveData<List<BeerData>>
 
     @Insert(onConflict = REPLACE)
     suspend fun insertBeer(beerData: List<BeerData>?)
 
     @Delete
     suspend fun deleteBeer(beerData: BeerData)
+
+    @Query("DELETE FROM beerData")
+    suspend fun deleteAllBeers()
+
 }

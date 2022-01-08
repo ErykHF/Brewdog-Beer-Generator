@@ -2,13 +2,11 @@ package com.erykhf.android.brewdogbeergenerator.ui.main.savedbeers
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -34,23 +32,28 @@ class SavedBeerFragment : Fragment(R.layout.fragment_saved_beer_list) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSavedBeerListBinding.bind(view)
         setupRecyclerView()
+        setHasOptionsMenu(true)
 
         lifecycleScope.launch {
-            beerAdapter.setImageList(viewModel.getAllBeers())
 
-            beerAdapter.setOnItemClickListener {
-                val builder = AlertDialog.Builder(requireContext())
-                builder.setPositiveButton("Yes") { _, _ ->
-                    viewModel.deleteBeer(it)
-                    Toast.makeText(requireContext(), "Deleted ${it.name}", Toast.LENGTH_SHORT)
-                        .show()
+            viewModel.readAllData.observe(viewLifecycleOwner) {
+                beerAdapter.setImageList(it)
+
+                beerAdapter.setOnItemClickListener {
+                    val builder = AlertDialog.Builder(requireContext())
+                    builder.setPositiveButton("Yes") { _, _ ->
+                        viewModel.deleteBeer(it)
+                        beerAdapter.notifyDataSetChanged()
+                        Toast.makeText(requireContext(), "Deleted ${it.name}", Toast.LENGTH_SHORT)
+                            .show()
+
+                    }
+                    builder.setNegativeButton("Nah") { _, _ -> }
+                    builder.setTitle("Delete")
+                    builder.setMessage("Do you want to delete ${it.name}?")
+                    builder.create().show()
 
                 }
-                builder.setNegativeButton("Nah") { _, _ -> }
-                builder.setTitle("Delete")
-                builder.setMessage("Do you want to delete ${it.name}?")
-                builder.create().show()
-
             }
 
         }
@@ -62,7 +65,27 @@ class SavedBeerFragment : Fragment(R.layout.fragment_saved_beer_list) {
         beerAdapter = SavedBeerRecyclerViewAdapter()
         binding.list.apply {
             adapter = beerAdapter
-            layoutManager = GridLayoutManager(requireActivity(), 2)
+            layoutManager = GridLayoutManager(activity, 2)
+
+        }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.saved_beer_fragment, menu)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        return when (item.itemId) {
+            R.id.delete -> {
+                viewModel.deleteAll()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
