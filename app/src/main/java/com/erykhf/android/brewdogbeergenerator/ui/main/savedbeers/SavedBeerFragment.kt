@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.erykhf.android.brewdogbeergenerator.R
-import com.erykhf.android.brewdogbeergenerator.databinding.FragmentSavedBeerBinding
+import com.erykhf.android.brewdogbeergenerator.database.SortOrder
 import com.erykhf.android.brewdogbeergenerator.databinding.FragmentSavedBeerListBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -80,10 +78,21 @@ class SavedBeerFragment : Fragment(R.layout.fragment_saved_beer_list) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         return when (item.itemId) {
+            R.id.name -> {
+                viewModel.onSortOrderSelected(SortOrder.BY_NAME)
+                true
+            }
+
+            R.id.date -> {
+                viewModel.onSortOrderSelected(SortOrder.BY_DATE)
+                true
+            }
+
             R.id.delete -> {
                 viewModel.deleteAll()
                 true
             }
+
 
             else -> super.onOptionsItemSelected(item)
         }

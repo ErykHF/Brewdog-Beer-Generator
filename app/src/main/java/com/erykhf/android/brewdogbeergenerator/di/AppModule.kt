@@ -1,11 +1,14 @@
 package com.erykhf.android.brewdogbeergenerator.di
 
+import android.content.Context
 import com.erykhf.android.brewdogbeergenerator.api.PunkApiService
 import com.erykhf.android.brewdogbeergenerator.database.BeerDao
 import com.erykhf.android.brewdogbeergenerator.repository.Repository
+import com.erykhf.android.brewdogbeergenerator.utils.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -30,4 +33,9 @@ object AppModule {
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create(PunkApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun dataStoreManager(@ApplicationContext appContext: Context): PreferenceManager =
+        PreferenceManager(appContext)
 }

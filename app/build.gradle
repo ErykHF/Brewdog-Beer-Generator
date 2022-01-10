@@ -85,4 +85,13 @@ dependencies {
     implementation "androidx.room:room-ktx:2.4.0"
     kapt "androidx.room:room-compiler:2.4.0"
     kapt "android.arch.persistence.room:compiler:1.1.1"
+
+    //Jetpack DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    //Lifecycle
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 }

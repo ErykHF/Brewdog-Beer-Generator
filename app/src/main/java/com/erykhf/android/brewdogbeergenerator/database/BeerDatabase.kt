@@ -2,6 +2,7 @@ package com.erykhf.android.brewdogbeergenerator.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.erykhf.android.brewdogbeergenerator.model.BeerData
 
 @Database(entities = [BeerData::class], version = 1)
