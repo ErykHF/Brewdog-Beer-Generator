@@ -39,25 +39,26 @@ class SavedBeerFragment : Fragment(R.layout.fragment_saved_beer_list) {
             viewModel.readAllData.observe(viewLifecycleOwner) { beer ->
                 beerAdapter.setBeerList(beer)
 
-                beerAdapter.setOnItemClickListener {
+                beerAdapter.onLongClick {
                     val builder = AlertDialog.Builder(requireContext())
                     builder.setPositiveButton("Yes") { _, _ ->
-                        val navDirections = SavedBeerFragmentDirections.actionSavedBeerFragmentToBeerView(it)
-                        findNavController().navigate(navDirections)
-//                        viewModel.deleteBeer(beer)
-//                        beerAdapter.notifyDataSetChanged()
+                        viewModel.deleteBeer(it)
+                        beerAdapter.notifyDataSetChanged()
 
                     }
                     builder.setNegativeButton("Nah") { _, _ -> }
                     builder.setTitle("Delete")
-                    builder.setMessage("Do you want to view ${it.name}?")
+                    builder.setMessage("Do you want to delete ${it.name}?")
                     builder.create().show()
 
                 }
             }
 
+            beerAdapter.setOnItemClickListener {
+                val navDirections = SavedBeerFragmentDirections.actionSavedBeerFragmentToBeerView(it)
+                findNavController().navigate(navDirections)
+            }
         }
-
     }
 
 

@@ -1,8 +1,11 @@
 package com.erykhf.android.brewdogbeergenerator.ui.main.savedbeers
 
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.erykhf.android.brewdogbeergenerator.databinding.FragmentSavedBeerBinding
 import com.erykhf.android.brewdogbeergenerator.model.BeerData
 import com.erykhf.android.brewdogbeergenerator.utils.Util
@@ -32,6 +35,7 @@ class SavedBeerRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val beer = values[position]
         holder.bind(beer)
+        holder.itemView.isLongClickable = true
 
         holder.itemView.apply {
             setOnClickListener {
@@ -45,7 +49,11 @@ class SavedBeerRecyclerViewAdapter(
     override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(private val binding: FragmentSavedBeerBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), View.OnLongClickListener {
+
+        init {
+            itemView.setOnLongClickListener(this)
+        }
 
         fun bind(beerData: BeerData) {
 
@@ -65,11 +73,31 @@ class SavedBeerRecyclerViewAdapter(
                 desc.text = beerData.tagline
             }
         }
+
+        override fun onLongClick(v: View): Boolean {
+            Toast.makeText(v.context, "long click", Toast.LENGTH_SHORT).show()
+            // Return true to indicate the click was handled
+            val position = adapterPosition
+            val beer = values[position]
+            Log.d("testing ", "pos$beer")
+            onLongClickListener?.let {
+                it(beer)
+            }
+
+            return true
+        }
     }
 
     private var onItemClickListener: ((BeerData) -> Unit)? = null
 
     fun setOnItemClickListener(listener: (BeerData) -> Unit) {
         onItemClickListener = listener
+    }
+
+    private var onLongClickListener: ((BeerData) -> Unit)? = null
+
+
+    fun onLongClick(listener: (BeerData) -> Unit) {
+        onLongClickListener = listener
     }
 }
