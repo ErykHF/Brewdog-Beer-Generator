@@ -75,9 +75,7 @@ class SavedBeerRecyclerViewAdapter(
         }
 
         override fun onLongClick(v: View): Boolean {
-            Toast.makeText(v.context, "long click", Toast.LENGTH_SHORT).show()
-            // Return true to indicate the click was handled
-            val position = adapterPosition
+            val position = absoluteAdapterPosition
             val beer = values[position]
             Log.d("testing ", "pos$beer")
             onLongClickListener?.let {
