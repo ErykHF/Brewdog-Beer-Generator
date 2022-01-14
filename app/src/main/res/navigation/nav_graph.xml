@@ -18,5 +18,18 @@
         android:id="@+id/savedBeerFragment"
         android:name="com.erykhf.android.brewdogbeergenerator.ui.main.savedbeers.SavedBeerFragment"
         android:label="fragment_saved_beer_list"
-        tools:layout="@layout/fragment_saved_beer_list" />
+        tools:layout="@layout/fragment_saved_beer_list" >
+        <action
+            android:id="@+id/action_savedBeerFragment_to_beerView"
+            app:destination="@id/beerView" />
+    </fragment>
+    <fragment
+        android:id="@+id/beerView"
+        android:name="com.erykhf.android.brewdogbeergenerator.ui.main.beerview.BeerView"
+        android:label="beer_view_fragment"
+        tools:layout="@layout/beer_view_fragment" >
+        <argument
+            android:name="beerName"
+            app:argType="com.erykhf.android.brewdogbeergenerator.model.BeerData" />
+    </fragment>
 </navigation>

@@ -4,6 +4,7 @@ import androidx.annotation.Nullable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
+import java.io.Serializable
 import java.util.*
 
 @Entity(tableName = "beerData")
@@ -16,4 +17,4 @@ data class BeerData(
     val tagline: String,
     val first_brewed: String,
     val description: String
-    )
+    ): Serializable

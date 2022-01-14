@@ -6,7 +6,10 @@ import com.erykhf.android.brewdogbeergenerator.database.SortOrder
 import com.erykhf.android.brewdogbeergenerator.model.BeerData
 import javax.inject.Inject
 
-class Repository @Inject constructor(private val api: PunkApiService, private val beerDao: BeerDao){
+class Repository @Inject constructor(
+    private val api: PunkApiService,
+    private val beerDao: BeerDao
+) {
 
     fun getBeers() = api.loadImages()
 
@@ -17,5 +20,7 @@ class Repository @Inject constructor(private val api: PunkApiService, private va
     suspend fun deleteBeer(beerData: BeerData) = beerDao.deleteBeer(beerData)
 
     suspend fun deleteAllBeers() = beerDao.deleteAllBeers()
+
+    suspend fun getByName(beerName: String) = beerDao.beerByName(beerName)
 
 }

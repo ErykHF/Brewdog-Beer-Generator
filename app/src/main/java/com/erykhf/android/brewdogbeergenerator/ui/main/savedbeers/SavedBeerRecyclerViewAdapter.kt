@@ -15,7 +15,7 @@ class SavedBeerRecyclerViewAdapter(
 
     private var values = arrayListOf<BeerData>()
 
-    fun setImageList(images: List<BeerData>) {
+    fun setBeerList(images: List<BeerData>) {
         values.clear()
         values.addAll(images)
         notifyDataSetChanged()

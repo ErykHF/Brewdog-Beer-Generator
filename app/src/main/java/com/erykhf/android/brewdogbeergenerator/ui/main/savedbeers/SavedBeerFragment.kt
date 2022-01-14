@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.database.SortOrder
 import com.erykhf.android.brewdogbeergenerator.databinding.FragmentSavedBeerListBinding
@@ -34,21 +36,21 @@ class SavedBeerFragment : Fragment(R.layout.fragment_saved_beer_list) {
 
         lifecycleScope.launch {
 
-            viewModel.readAllData.observe(viewLifecycleOwner) {
-                beerAdapter.setImageList(it)
+            viewModel.readAllData.observe(viewLifecycleOwner) { beer ->
+                beerAdapter.setBeerList(beer)
 
                 beerAdapter.setOnItemClickListener {
                     val builder = AlertDialog.Builder(requireContext())
                     builder.setPositiveButton("Yes") { _, _ ->
-                        viewModel.deleteBeer(it)
-                        beerAdapter.notifyDataSetChanged()
-                        Toast.makeText(requireContext(), "Deleted ${it.name}", Toast.LENGTH_SHORT)
-                            .show()
+                        val navDirections = SavedBeerFragmentDirections.actionSavedBeerFragmentToBeerView(it)
+                        findNavController().navigate(navDirections)
+//                        viewModel.deleteBeer(beer)
+//                        beerAdapter.notifyDataSetChanged()
 
                     }
                     builder.setNegativeButton("Nah") { _, _ -> }
                     builder.setTitle("Delete")
-                    builder.setMessage("Do you want to delete ${it.name}?")
+                    builder.setMessage("Do you want to view ${it.name}?")
                     builder.create().show()
 
                 }

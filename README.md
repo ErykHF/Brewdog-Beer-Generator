@@ -4,7 +4,7 @@ An app that uses the Punk REST API to generate Random Beers!
 
 ## Technology Used
 * Kotlin
-* MVVM (ModelView View Model)
+* MVVM (Model View ViewModel)
 * View Binding
 * Navigation Component
 * Livedata

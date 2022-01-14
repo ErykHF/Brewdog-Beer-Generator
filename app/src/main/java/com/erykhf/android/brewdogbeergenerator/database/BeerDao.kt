@@ -7,7 +7,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import com.erykhf.android.brewdogbeergenerator.model.BeerData
-enum class SortOrder {BY_NAME, BY_DATE}
+
+enum class SortOrder { BY_NAME, BY_DATE }
 
 @Dao
 interface BeerDao {
@@ -32,5 +33,8 @@ interface BeerDao {
 
     @Query("DELETE FROM beerData")
     suspend fun deleteAllBeers()
+
+    @Query("SELECT * FROM beerData WHERE name LIKE :beerName")
+    suspend fun beerByName(beerName: String): BeerData
 
 }
