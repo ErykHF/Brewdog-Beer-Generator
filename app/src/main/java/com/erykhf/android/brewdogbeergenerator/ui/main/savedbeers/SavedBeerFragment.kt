@@ -75,7 +75,6 @@ class SavedBeerFragment : Fragment(R.layout.fragment_saved_beer_list) {
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.saved_beer_fragment, menu)
 
     }

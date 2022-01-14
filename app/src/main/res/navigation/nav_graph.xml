@@ -31,5 +31,8 @@
         <argument
             android:name="beerName"
             app:argType="com.erykhf.android.brewdogbeergenerator.model.BeerData" />
+        <action
+            android:id="@+id/action_beerView_to_savedBeerFragment"
+            app:destination="@id/savedBeerFragment" />
     </fragment>
 </navigation>

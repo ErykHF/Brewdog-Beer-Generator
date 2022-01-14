@@ -1,13 +1,13 @@
 package com.erykhf.android.brewdogbeergenerator.ui.main.beerview
 
+import android.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.databinding.BeerViewFragmentBinding
@@ -27,6 +27,7 @@ class BeerView : Fragment(R.layout.beer_view_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = BeerViewFragmentBinding.bind(view)
+        setHasOptionsMenu(true)
 
         lifecycleScope.launch {
 
@@ -48,6 +49,30 @@ class BeerView : Fragment(R.layout.beer_view_fragment) {
 
         }
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.delete -> {
+
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setPositiveButton("Yes") { _, _ ->
+                    viewModel.deleteBeer(args.beerName)
+                    findNavController().popBackStack(R.id.beerView, true)
+                }
+                builder.setNegativeButton("Nah") { _, _ -> }
+                builder.setTitle("Delete")
+                builder.setMessage("Do you want to delete ${args.beerName.name}?")
+                builder.create().show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.beer_view_fragment, menu)
     }
 
 }
