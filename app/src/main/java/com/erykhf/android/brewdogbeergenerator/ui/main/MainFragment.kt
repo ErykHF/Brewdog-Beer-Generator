@@ -36,6 +36,18 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
         connectionLiveData = ConnectionLiveData(requireContext())
 
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            binding.beerName.text = it
+        }
+
+        viewModel.connectedOrNot.observe(viewLifecycleOwner) {
+            if (it == true) {
+                getBeerResponse()
+            } else {
+                Toast.makeText(requireContext(), "No Interwebs", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         binding.floatingActionButton2?.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_savedBeerFragment)
         }
@@ -67,14 +79,17 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             }
 
             beerResponse?.let {
-                val noImagePlaceHolder = "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
+                val noImagePlaceHolder =
+                    "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
                 val imageUrl = beerResponse.firstOrNull()?.image_url ?: noImagePlaceHolder
                 val progressDrawable = getProgressDrawable(requireContext())
 
                 binding.mainProfileImage.loadImages(imageUrl, progressDrawable)
                 binding.beerName.text = beerResponse.firstOrNull()?.name ?: "Unknown"
-                binding.descriptionResponse.text = beerResponse.firstOrNull()?.description ?: "No Description"
-                binding.firstBrewed.text = ("First brewed: ${beerResponse.firstOrNull()?.first_brewed}")
+                binding.descriptionResponse.text =
+                    beerResponse.firstOrNull()?.description ?: "No Description"
+                binding.firstBrewed.text =
+                    ("First brewed: ${beerResponse.firstOrNull()?.first_brewed}")
                 binding.tagLine.text = beerResponse.firstOrNull()?.tagline ?: "No tags"
             }
         }

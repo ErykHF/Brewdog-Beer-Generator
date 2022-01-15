@@ -32,6 +32,12 @@ class MainViewModel @Inject constructor(
         repository.saveBeer(beerData)
     }
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
+    private val _connectedOrNot = MutableLiveData<Boolean>()
+    val connectedOrNot: LiveData<Boolean> = _connectedOrNot
+
 
     private fun getBeerImageResponse(): MutableLiveData<List<BeerData>> {
         val liveDataResponse: MutableLiveData<List<BeerData>> = MutableLiveData()
@@ -47,15 +53,17 @@ class MainViewModel @Inject constructor(
                         val beerResponse: List<BeerData>? = response.body()
                         liveDataResponse.value = beerResponse
                         Log.d("Retrofit", "onResponse: SUCCESS!")
+                        _connectedOrNot.value = true
 
-                    } else {
-                        Log.e("Retrofit", "onResponse: Not successful")
                     }
                 }
             }
 
             override fun onFailure(call: Call<List<BeerData>>, t: Throwable) {
                 Log.e("onFailure", "Failed to get search results", t)
+                _errorMessage.value =
+                    "No Internet connection or something went wrong with the server"
+                _connectedOrNot.value = false
             }
 
         })
