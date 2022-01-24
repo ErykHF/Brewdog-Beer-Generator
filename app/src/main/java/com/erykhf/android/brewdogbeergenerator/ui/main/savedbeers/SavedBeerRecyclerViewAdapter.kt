@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.erykhf.android.brewdogbeergenerator.databinding.FragmentSavedBeerBinding
 import com.erykhf.android.brewdogbeergenerator.model.BeerData
 import com.erykhf.android.brewdogbeergenerator.utils.Util
@@ -34,28 +36,58 @@ class SavedBeerRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val beer = values[position]
-        holder.bind(beer)
-        holder.itemView.isLongClickable = true
+        with(holder) {
+            itemView.tag = beer
+            bind(createOnClickListener(binding, beer.image_url, beer), beer)
+        }
 
-        holder.itemView.apply {
-            setOnClickListener {
-                onItemClickListener?.let {
-                    it(beer)
-                }
-            }
+//        holder.apply {
+//            bind(createOnClickListener(binding, beer.image_url, beer), beer)
+//        }
+
+
+//        holder.bind(beer)
+//        holder.itemView.isLongClickable = true
+//        ViewCompat.setTransitionName(holder.itemView, "Test_$position")
+//
+//        holder.itemView.apply {
+//            setOnClickListener {
+//                onItemClickListener?.let {
+//                    it(beer)
+//                }
+//            }
+//        }
+    }
+
+
+    private fun createOnClickListener(
+        binding: FragmentSavedBeerBinding,
+        imageId: String?,
+        beerData: BeerData
+    ): View.OnClickListener {
+        return View.OnClickListener {
+            val directions =
+                SavedBeerFragmentDirections.actionSavedBeerFragmentToBeerView(beerData, imageId)
+            val extras = FragmentNavigatorExtras(
+                binding.title to "title_$imageId",
+                binding.desc to "duration_$imageId",
+                binding.image to "thumbnail_$imageId"
+            )
+            it.findNavController().navigate(directions, extras)
         }
     }
 
     override fun getItemCount(): Int = values.size
 
-    inner class ViewHolder(private val binding: FragmentSavedBeerBinding) :
+    inner class ViewHolder(val binding: FragmentSavedBeerBinding) :
         RecyclerView.ViewHolder(binding.root), View.OnLongClickListener {
 
         init {
             itemView.setOnLongClickListener(this)
         }
 
-        fun bind(beerData: BeerData) {
+
+        fun bind(listener: View.OnClickListener, beerData: BeerData) {
 
             binding.apply {
 
@@ -65,12 +97,21 @@ class SavedBeerRecyclerViewAdapter(
                     "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
 
                 if (beerData.image_url.isNullOrBlank()) {
-                    image.loadImages(noImagePlaceHolder, progressDrawable)
+                    binding.image.loadImages(noImagePlaceHolder, progressDrawable)
                 } else {
-                    image.loadImages(imageLink, progressDrawable)
+                    binding.image.loadImages(imageLink, progressDrawable)
                 }
                 title.text = beerData.name
                 desc.text = beerData.tagline
+
+                ViewCompat.setTransitionName(binding.title, "title_${beerData.name}")
+                ViewCompat.setTransitionName(binding.desc, "duration_${beerData.description}")
+                ViewCompat.setTransitionName(binding.image, "thumbnail_${beerData.image_url}")
+//                with(binding) {
+//                    this.beerData = beerData
+//                    executePendingBindings()
+//                }
+                binding.root.setOnClickListener(listener)
             }
         }
 

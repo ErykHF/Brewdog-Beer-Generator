@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/date"
-        android:title="Sort By Date"
+        android:title="Sort By First Brewed"
         />
 
     <item

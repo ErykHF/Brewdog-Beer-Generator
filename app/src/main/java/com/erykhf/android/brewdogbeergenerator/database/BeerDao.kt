@@ -22,7 +22,7 @@ interface BeerDao {
     @Query("SELECT * FROM beerData ORDER by name ")
     fun getBeersByName(): LiveData<List<BeerData>>
 
-    @Query("SELECT * FROM beerData ORDER by id")
+    @Query("SELECT * FROM beerData ORDER by first_brewed")
     fun getBeerByDate(): LiveData<List<BeerData>>
 
     @Insert(onConflict = REPLACE)

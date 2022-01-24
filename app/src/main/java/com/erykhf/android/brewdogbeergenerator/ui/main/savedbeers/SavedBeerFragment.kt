@@ -6,9 +6,12 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.erykhf.android.brewdogbeergenerator.R
@@ -55,11 +58,17 @@ class SavedBeerFragment : Fragment(R.layout.fragment_saved_beer_list) {
                 }
             }
 
-            beerAdapter.setOnItemClickListener {
-                val navDirections =
-                    SavedBeerFragmentDirections.actionSavedBeerFragmentToBeerView(it)
-                findNavController().navigate(navDirections)
-            }
+//            beerAdapter.setOnItemClickListener {
+//
+//                val transitionName = getString(R.string.details_transition_name)
+//                val extras = FragmentNavigator.Extras.Builder()
+//                    .addSharedElement(binding.root.findViewById(R.id.card), "image")
+//                    .build()
+//                val navDirections =
+//                    SavedBeerFragmentDirections.actionSavedBeerFragmentToBeerView(it)
+//                val navController = findNavController()
+//                navController.navigate(navDirections, extras)
+//            }
         }
     }
 
@@ -68,7 +77,12 @@ class SavedBeerFragment : Fragment(R.layout.fragment_saved_beer_list) {
         beerAdapter = SavedBeerRecyclerViewAdapter()
         binding.list.apply {
             adapter = beerAdapter
+            postponeEnterTransition()
             layoutManager = GridLayoutManager(activity, 2)
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
 
         }
     }

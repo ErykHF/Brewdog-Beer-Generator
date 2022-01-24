@@ -4,15 +4,18 @@ import android.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.transition.TransitionInflater
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.databinding.BeerViewFragmentBinding
 import com.erykhf.android.brewdogbeergenerator.utils.Util
 import com.erykhf.android.brewdogbeergenerator.utils.Util.loadImages
+import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -29,9 +32,15 @@ class BeerView : Fragment(R.layout.beer_view_fragment) {
         binding = BeerViewFragmentBinding.bind(view)
         setHasOptionsMenu(true)
 
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+
         lifecycleScope.launch {
 
             viewModel.getBeer(args.beerName.name)
+
+            ViewCompat.setTransitionName(binding.beerName, "title_${args.imageId}")
+            ViewCompat.setTransitionName(binding.tagLine, "duration_${args.imageId}")
+            ViewCompat.setTransitionName(binding.mainProfileImage, "thumbnail_${args.imageId}")
 
             binding.beerName.text = args.beerName.name
             binding.descriptionResponse.text = args.beerName.description
@@ -48,6 +57,10 @@ class BeerView : Fragment(R.layout.beer_view_fragment) {
             }
 
         }
+
+        ViewCompat.setTransitionName(binding.beerName, "title_${args.imageId}")
+        ViewCompat.setTransitionName(binding.tagLine, "duration_${args.imageId}")
+        ViewCompat.setTransitionName(binding.mainProfileImage, "thumbnail_${args.imageId}")
 
     }
 

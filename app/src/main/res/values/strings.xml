@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Brewdog Beer Generator</string>
+    <string name="item_transition_name" translatable="false">foo_item_transition_%1$s</string>
+    <string name="details_transition_name" translatable="false">details_transition</string>
+
+
+
 </resources>
