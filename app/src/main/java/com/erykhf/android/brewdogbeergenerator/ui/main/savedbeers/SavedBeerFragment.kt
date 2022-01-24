@@ -76,7 +76,7 @@ class SavedBeerFragment : Fragment(R.layout.fragment_saved_beer_list) {
     private fun setupRecyclerView() {
         beerAdapter = SavedBeerRecyclerViewAdapter()
         binding.list.apply {
-            adapter = beerAdapter
+            this.adapter = beerAdapter
             postponeEnterTransition()
             layoutManager = GridLayoutManager(activity, 2)
             viewTreeObserver.addOnPreDrawListener {

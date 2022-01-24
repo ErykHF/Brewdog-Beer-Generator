@@ -27,20 +27,19 @@ class BeerView : Fragment(R.layout.beer_view_fragment) {
     private lateinit var binding: BeerViewFragmentBinding
     private val viewModel: BeerViewViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = BeerViewFragmentBinding.bind(view)
         setHasOptionsMenu(true)
 
-        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-
         lifecycleScope.launch {
 
             viewModel.getBeer(args.beerName.name)
-
-            ViewCompat.setTransitionName(binding.beerName, "title_${args.imageId}")
-            ViewCompat.setTransitionName(binding.tagLine, "duration_${args.imageId}")
-            ViewCompat.setTransitionName(binding.mainProfileImage, "thumbnail_${args.imageId}")
 
             binding.beerName.text = args.beerName.name
             binding.descriptionResponse.text = args.beerName.description
@@ -55,13 +54,11 @@ class BeerView : Fragment(R.layout.beer_view_fragment) {
             } else {
                 binding.mainProfileImage.loadImages(args.beerName.image_url, progressDrawable)
             }
-
         }
 
         ViewCompat.setTransitionName(binding.beerName, "title_${args.imageId}")
         ViewCompat.setTransitionName(binding.tagLine, "duration_${args.imageId}")
         ViewCompat.setTransitionName(binding.mainProfileImage, "thumbnail_${args.imageId}")
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

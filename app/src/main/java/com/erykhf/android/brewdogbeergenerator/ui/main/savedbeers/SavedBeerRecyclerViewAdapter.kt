@@ -45,18 +45,6 @@ class SavedBeerRecyclerViewAdapter(
 //            bind(createOnClickListener(binding, beer.image_url, beer), beer)
 //        }
 
-
-//        holder.bind(beer)
-//        holder.itemView.isLongClickable = true
-//        ViewCompat.setTransitionName(holder.itemView, "Test_$position")
-//
-//        holder.itemView.apply {
-//            setOnClickListener {
-//                onItemClickListener?.let {
-//                    it(beer)
-//                }
-//            }
-//        }
     }
 
 
@@ -89,30 +77,25 @@ class SavedBeerRecyclerViewAdapter(
 
         fun bind(listener: View.OnClickListener, beerData: BeerData) {
 
-            binding.apply {
+                ViewCompat.setTransitionName(binding.title, "title_${beerData.id}")
+                ViewCompat.setTransitionName(binding.desc, "duration_${beerData.id}")
+                ViewCompat.setTransitionName(binding.image, "thumbnail_${beerData.id}")
+                with(binding) {
+                    val progressDrawable = Util.getProgressDrawable(itemView.context)
+                    val imageLink = beerData.image_url
+                    val noImagePlaceHolder =
+                        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
 
-                val progressDrawable = Util.getProgressDrawable(itemView.context)
-                val imageLink = beerData.image_url
-                val noImagePlaceHolder =
-                    "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
-
-                if (beerData.image_url.isNullOrBlank()) {
-                    binding.image.loadImages(noImagePlaceHolder, progressDrawable)
-                } else {
-                    binding.image.loadImages(imageLink, progressDrawable)
+                    if (beerData.image_url.isNullOrBlank()) {
+                        image.loadImages(noImagePlaceHolder, progressDrawable)
+                    } else {
+                        image.loadImages(imageLink, progressDrawable)
+                    }
+                    title.text = beerData.name
+                    desc.text = beerData.tagline
                 }
-                title.text = beerData.name
-                desc.text = beerData.tagline
-
-                ViewCompat.setTransitionName(binding.title, "title_${beerData.name}")
-                ViewCompat.setTransitionName(binding.desc, "duration_${beerData.description}")
-                ViewCompat.setTransitionName(binding.image, "thumbnail_${beerData.image_url}")
-//                with(binding) {
-//                    this.beerData = beerData
-//                    executePendingBindings()
-//                }
                 binding.root.setOnClickListener(listener)
-            }
+
         }
 
         override fun onLongClick(v: View): Boolean {
@@ -125,12 +108,6 @@ class SavedBeerRecyclerViewAdapter(
 
             return true
         }
-    }
-
-    private var onItemClickListener: ((BeerData) -> Unit)? = null
-
-    fun setOnItemClickListener(listener: (BeerData) -> Unit) {
-        onItemClickListener = listener
     }
 
     private var onLongClickListener: ((BeerData) -> Unit)? = null
