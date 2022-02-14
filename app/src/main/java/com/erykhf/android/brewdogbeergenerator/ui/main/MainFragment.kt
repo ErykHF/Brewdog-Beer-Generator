@@ -36,18 +36,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
         connectionLiveData = ConnectionLiveData(requireContext())
 
-        viewModel.errorMessage.observe(viewLifecycleOwner) {
-            binding.beerName.text = it
-        }
-
-        viewModel.connectedOrNot.observe(viewLifecycleOwner) {
-            if (it == true) {
-                getBeerResponse()
-            } else {
-                Toast.makeText(requireContext(), "No Interwebs", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         binding.floatingActionButton2?.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_savedBeerFragment)
         }
