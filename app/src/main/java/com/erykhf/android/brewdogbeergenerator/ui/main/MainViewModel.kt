@@ -19,6 +19,8 @@ class MainViewModel @Inject constructor(
     private val _beerItemLiveData: MutableLiveData<List<BeerData>> = MutableLiveData()
     var beerItemLiveData: LiveData<List<BeerData>> = _beerItemLiveData
 
+    val error: MutableLiveData<String> = MutableLiveData()
+
     init {
         beerItemLiveData = getBeerImageResponse()
 
@@ -50,12 +52,16 @@ class MainViewModel @Inject constructor(
 
                     } else {
                         Log.e("Retrofit", "onResponse: Not successful")
+                        error.value = response.message()
+
                     }
                 }
             }
 
             override fun onFailure(call: Call<List<BeerData>>, t: Throwable) {
                 Log.e("onFailure", "Failed to get search results", t)
+                error.value = t.message
+
             }
 
         })

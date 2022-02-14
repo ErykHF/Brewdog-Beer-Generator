@@ -56,6 +56,10 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 Toast.makeText(requireContext(), "Network Unavailable", Toast.LENGTH_SHORT).show()
             }
         }
+
+        viewModel.error.observe(viewLifecycleOwner){
+            Snackbar.make(requireView(), it, Snackbar.LENGTH_LONG).show()
+        }
     }
 
     private fun getBeerResponse() {
