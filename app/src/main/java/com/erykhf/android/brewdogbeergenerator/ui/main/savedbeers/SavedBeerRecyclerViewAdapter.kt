@@ -87,9 +87,9 @@ class SavedBeerRecyclerViewAdapter(
                         "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png"
 
                     if (beerData.image_url.isNullOrBlank()) {
-                        image.loadImages(noImagePlaceHolder, progressDrawable)
+                        image.loadImages(noImagePlaceHolder)
                     } else {
-                        image.loadImages(imageLink, progressDrawable)
+                        image.loadImages(imageLink)
                     }
                     title.text = beerData.name
                     desc.text = beerData.tagline

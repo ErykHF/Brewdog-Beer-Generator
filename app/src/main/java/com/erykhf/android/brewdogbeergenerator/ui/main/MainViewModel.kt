@@ -26,6 +26,22 @@ class MainViewModel @Inject constructor(
 
     }
 
+    val beers = listOf<BeerData>()
+
+
+    private val _name = MutableLiveData(beerItemLiveData.value?.firstOrNull()?.name)
+    private val _description = MutableLiveData(beerItemLiveData.value?.firstOrNull()?.description)
+    private val _tagline = MutableLiveData(beerItemLiveData.value?.firstOrNull()?.tagline)
+    private val _imgUrl = MutableLiveData(beerItemLiveData.value?.firstOrNull()?.image_url)
+    private val _firstbrewed = MutableLiveData(beerItemLiveData.value?.firstOrNull()?.first_brewed)
+
+
+    val name: LiveData<String?> = _name
+    val description: LiveData<String?> = _description
+    val tagline: LiveData<String?> = _tagline
+    val imgUrl: LiveData<String?> = _imgUrl
+    val firstBrewed: LiveData<String?> = _firstbrewed
+
     fun refresh() = viewModelScope.launch {
         beerItemLiveData = getBeerImageResponse()
     }

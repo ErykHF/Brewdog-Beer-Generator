@@ -50,9 +50,9 @@ class BeerView : Fragment(R.layout.beer_view_fragment) {
             val progressDrawable = Util.getProgressDrawable(requireContext())
 
             if (args.beerName.image_url.isNullOrBlank()) {
-                binding.mainProfileImage.loadImages(noImagePlaceHolder, progressDrawable)
+                binding.mainProfileImage.loadImages(noImagePlaceHolder)
             } else {
-                binding.mainProfileImage.loadImages(args.beerName.image_url, progressDrawable)
+                binding.mainProfileImage.loadImages(args.beerName.image_url)
             }
         }
 
