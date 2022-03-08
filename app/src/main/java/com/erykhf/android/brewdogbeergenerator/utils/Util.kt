@@ -42,6 +42,6 @@ object Util {
 
 @BindingAdapter("imageFromUrl")
 fun ImageView.loadImages(uri: String?) {
-    Picasso.get().load(uri).error(R.mipmap.ic_launcher).into(this)
+    Picasso.get().load(uri).placeholder(Util.getProgressDrawable(this.context)).error(R.mipmap.ic_launcher).into(this)
 
 }
