@@ -7,6 +7,10 @@
         <variable
             name="viewModel"
             type="com.erykhf.android.brewdogbeergenerator.ui.main.MainViewModel" />
+
+        <variable
+            name="fragment"
+            type="com.erykhf.android.brewdogbeergenerator.ui.main.MainFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,10 +21,11 @@
 
         <ImageView
             android:id="@+id/main_profile_image"
-            app:imageFromUrl="@{viewModel.imgUrl}"
             android:layout_width="200dp"
             android:layout_height="400dp"
             android:layout_marginTop="24dp"
+            app:imageFromUrl="@{viewModel.imgUrl}"
+            android:onClick="@{() -> viewModel.refresh()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,11 +35,11 @@
             android:id="@+id/beer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:textAlignment="center"
             android:text="@{viewModel.name}"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -49,10 +54,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:text="@{viewModel.firstBrewed}"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:text="@{viewModel.firstBrewed}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,11 +71,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:text="@{viewModel.tagline}"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:text="@{viewModel.tagline}"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -99,10 +103,9 @@
                 android:layout_marginEnd="8dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="4dp"
-                android:text="@{viewModel.description}"
-
                 android:paddingRight="10dp"
                 android:paddingBottom="4dp"
+                android:text="@{viewModel.description}"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -115,7 +118,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:onClick="@{() -> fragment.goToSavedBeers()}"
             android:clickable="true"
+            android:focusable="true"
             android:src="@android:drawable/btn_star_big_on"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -127,6 +132,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:clickable="true"
+            android:focusable="true"
             android:src="@android:drawable/ic_input_add"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/floatingActionButton2" />

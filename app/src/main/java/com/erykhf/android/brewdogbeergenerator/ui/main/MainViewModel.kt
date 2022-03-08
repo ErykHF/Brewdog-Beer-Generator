@@ -23,24 +23,31 @@ class MainViewModel @Inject constructor(
 
     init {
         beerItemLiveData = getBeerImageResponse()
-
     }
 
     val beers = listOf<BeerData>()
 
 
-    private val _name = MutableLiveData(beerItemLiveData.value?.firstOrNull()?.name)
-    private val _description = MutableLiveData(beerItemLiveData.value?.firstOrNull()?.description)
-    private val _tagline = MutableLiveData(beerItemLiveData.value?.firstOrNull()?.tagline)
-    private val _imgUrl = MutableLiveData(beerItemLiveData.value?.firstOrNull()?.image_url)
-    private val _firstbrewed = MutableLiveData(beerItemLiveData.value?.firstOrNull()?.first_brewed)
+    private val _name = MutableLiveData<String>()
+    private val _description = MutableLiveData<String>()
+    private val _tagline = MutableLiveData<String>()
+    private val _imgUrl = MutableLiveData<String>()
+    private val _firstbrewed = MutableLiveData<String>()
 
 
-    val name: LiveData<String?> = _name
-    val description: LiveData<String?> = _description
-    val tagline: LiveData<String?> = _tagline
+    val name = _name
+    val description = _description
+    val tagline: LiveData<String?>
+        get() = _tagline
     val imgUrl: LiveData<String?> = _imgUrl
     val firstBrewed: LiveData<String?> = _firstbrewed
+
+    init {
+        description
+        _tagline
+        _imgUrl
+        _firstbrewed
+    }
 
     fun refresh() = viewModelScope.launch {
         beerItemLiveData = getBeerImageResponse()
@@ -65,6 +72,19 @@ class MainViewModel @Inject constructor(
                         val beerResponse: List<BeerData>? = response.body()
                         liveDataResponse.value = beerResponse
                         Log.d("Retrofit", "onResponse: SUCCESS!")
+                        println(beerResponse)
+
+                        if (beerResponse != null) {
+                            for (beer in beerResponse.iterator()){
+                                _name.value = beer.name
+                                _firstbrewed.value = beer.first_brewed
+                                _tagline.value = beer.tagline
+                                _description.value = beer.description
+                                _imgUrl.value = beer.image_url
+                                    ?: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png"
+
+                            }
+                        }
 
                     } else {
                         Log.e("Retrofit", "onResponse: Not successful")

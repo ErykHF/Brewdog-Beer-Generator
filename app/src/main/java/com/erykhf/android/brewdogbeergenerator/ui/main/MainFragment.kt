@@ -8,7 +8,9 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -19,7 +21,7 @@ import com.erykhf.android.brewdogbeergenerator.networkutils.ConnectionLiveData
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.databinding.MainFragmentBinding
 import com.erykhf.android.brewdogbeergenerator.utils.Util.getProgressDrawable
-import com.erykhf.android.brewdogbeergenerator.utils.Util.loadImages
+import com.erykhf.android.brewdogbeergenerator.utils.loadImages
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,39 +30,33 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     private lateinit var connectionLiveData: ConnectionLiveData
     private val viewModel: MainViewModel by viewModels()
+    private lateinit var binding: MainFragmentBinding
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.main_fragment, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
+        return binding.root
+
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 //        binding = MainFragmentBinding.bind(view)
-        val binding: MainFragmentBinding = DataBindingUtil.setContentView(requireActivity(), R.layout.main_fragment)
-        binding.lifecycleOwner = this
+        binding = DataBindingUtil.setContentView(requireActivity(), R.layout.main_fragment)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
+    }
 
-        connectionLiveData = ConnectionLiveData(requireContext())
-
-        binding.floatingActionButton2?.setOnClickListener {
+    fun goToSavedBeers(){
             findNavController().navigate(R.id.action_mainFragment_to_savedBeerFragment)
-        }
-
-        connectionLiveData.observe(viewLifecycleOwner) { isNetworkAvailable ->
-
-            if (isNetworkAvailable == true) {
-
-
-                binding.mainProfileImage.setOnClickListener {
-
-                    viewModel.refresh()
-                }
-            } else {
-                snackFunction()
-                Toast.makeText(requireContext(), "Network Unavailable", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        viewModel.error.observe(viewLifecycleOwner){
-            Snackbar.make(requireView(), it, Snackbar.LENGTH_LONG).show()
-        }
     }
 
 

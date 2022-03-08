@@ -11,7 +11,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.erykhf.android.brewdogbeergenerator.databinding.FragmentSavedBeerBinding
 import com.erykhf.android.brewdogbeergenerator.model.BeerData
 import com.erykhf.android.brewdogbeergenerator.utils.Util
-import com.erykhf.android.brewdogbeergenerator.utils.Util.loadImages
+import com.erykhf.android.brewdogbeergenerator.utils.loadImages
 
 
 class SavedBeerRecyclerViewAdapter(

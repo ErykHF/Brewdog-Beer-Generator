@@ -27,11 +27,7 @@ object Util {
     }
 
 
-    @BindingAdapter("imageFromUrl")
-    fun ImageView.loadImages(uri: String?) {
-        Picasso.get().load(uri).error(R.mipmap.ic_launcher).into(this)
 
-    }
 
 //    @BindingAdapter("imageFromUrl")
 //    fun bindImageFromUrl(view: ImageView, imageUrl: String?) {
@@ -42,4 +38,10 @@ object Util {
 //                .into(view)
 //        }
 //    }
+}
+
+@BindingAdapter("imageFromUrl")
+fun ImageView.loadImages(uri: String?) {
+    Picasso.get().load(uri).error(R.mipmap.ic_launcher).into(this)
+
 }

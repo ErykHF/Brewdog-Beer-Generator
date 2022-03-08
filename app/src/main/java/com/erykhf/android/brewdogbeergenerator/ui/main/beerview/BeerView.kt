@@ -14,7 +14,7 @@ import androidx.transition.TransitionInflater
 import com.erykhf.android.brewdogbeergenerator.R
 import com.erykhf.android.brewdogbeergenerator.databinding.BeerViewFragmentBinding
 import com.erykhf.android.brewdogbeergenerator.utils.Util
-import com.erykhf.android.brewdogbeergenerator.utils.Util.loadImages
+import com.erykhf.android.brewdogbeergenerator.utils.loadImages
 import com.google.android.material.transition.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ class BeerView : Fragment(R.layout.beer_view_fragment) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        sharedElementEnterTransition = TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
